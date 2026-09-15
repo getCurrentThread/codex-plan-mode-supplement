@@ -1,0 +1,6 @@
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    is_admin INTEGER NOT NULL DEFAULT 0,
+    last_seen TEXT NOT NULL
+);
