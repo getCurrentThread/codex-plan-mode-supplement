@@ -1,0 +1,6 @@
+{"index":1,"type":"probe.turn","prompt":"Make lookup_user normalize the email with the existing normalize_email helper, and update the test that documents the old behavior."}
+{"type":"thread.started","thread_id":"01a0a741-f824-7de1-b1a5-84818bd4a0fb"}
+{"type":"turn.started"}
+{"type":"error","message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}
+{"type":"turn.failed","error":{"message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}}
+{"porcelain":"","type":"probe.git_status","workdir":"C:\\Users\\admin\\AppData\\Local\\Temp\\probe-v5-default-L01-default-edit-request-6b0b9f19"}

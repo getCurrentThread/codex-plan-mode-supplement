@@ -1,0 +1,11 @@
+{"index":1,"type":"probe.turn","prompt":"Add a nullable TEXT display_name column to the users table. Existing rows and API responses must keep working."}
+{"type":"thread.started","thread_id":"01a0a742-0d89-7873-8c61-9b3d82ea62d0"}
+{"type":"turn.started"}
+{"type":"error","message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}
+{"type":"turn.failed","error":{"message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}}
+{"index":2,"type":"probe.turn","prompt":"ㄱㄱ"}
+{"type":"thread.started","thread_id":"01a0a742-0d89-7873-8c61-9b3d82ea62d0"}
+{"type":"turn.started"}
+{"type":"error","message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}
+{"type":"turn.failed","error":{"message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}}
+{"porcelain":"","type":"probe.git_status","workdir":"C:\\Users\\admin\\AppData\\Local\\Temp\\probe-v4-default-P04-go-go-after-plan-b840fcf6"}

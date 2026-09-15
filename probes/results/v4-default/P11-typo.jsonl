@@ -1,0 +1,6 @@
+{"index":1,"type":"probe.turn","prompt":"Fix the typo 'Welcom' in README.md."}
+{"type":"thread.started","thread_id":"01a0a742-316f-7c21-b04e-efb0a467e184"}
+{"type":"turn.started"}
+{"type":"error","message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}
+{"type":"turn.failed","error":{"message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}}
+{"porcelain":"","type":"probe.git_status","workdir":"C:\\Users\\admin\\AppData\\Local\\Temp\\probe-v4-default-P11-typo-bac07d10"}

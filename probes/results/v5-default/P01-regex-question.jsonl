@@ -1,0 +1,6 @@
+{"index":1,"type":"probe.turn","prompt":"What does EMAIL_LOCAL_RE in src/text.py match?"}
+{"type":"thread.started","thread_id":"01a0a741-f7d0-7d02-a420-12ed387b5e1a"}
+{"type":"turn.started"}
+{"type":"error","message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}
+{"type":"turn.failed","error":{"message":"You've hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 12:34 PM."}}
+{"porcelain":"","type":"probe.git_status","workdir":"C:\\Users\\admin\\AppData\\Local\\Temp\\probe-v5-default-P01-regex-question-384217f4"}
