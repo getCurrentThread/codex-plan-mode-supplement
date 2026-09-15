@@ -1,0 +1,4 @@
+# Probe runner scratch
+probes/results*/.usage-limit-hit
+**/__pycache__/
+*.pyc

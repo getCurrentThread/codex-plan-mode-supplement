@@ -1,0 +1,38 @@
+{
+	"name": "plan-mode-supplement",
+	"version": "0.2.0",
+	"description": "A planning-quality supplement for Codex Plan Mode on GPT-6-Astra, derived from a measured comparison against native Plan Mode.",
+	"author": {
+		"name": "getCurrentThread",
+		"url": "https://github.com/getCurrentThread"
+	},
+	"homepage": "https://github.com/getCurrentThread/codex-plan-mode-supplement",
+	"repository": "https://github.com/getCurrentThread/codex-plan-mode-supplement",
+	"license": "MIT",
+	"keywords": [
+		"codex",
+		"codex-plugin",
+		"plan-mode",
+		"prompt",
+		"planning"
+	],
+	"skills": "./skills/",
+	"interface": {
+		"displayName": "Plan Mode Supplement",
+		"shortDescription": "Raises plan quality while Codex Plan Mode is active",
+		"longDescription": "A 4.4k-character supplement that layers on top of Codex's native Plan Mode instead of replacing them. It adds reuse-first grounding, verification with observable pass/fail, rollback for irreversible steps, a risk statement when the user drops a safety step, and a silent adversarial review before the plan is emitted. The repository also ships the probe harness used to compare it against native Plan Mode.",
+		"developerName": "getCurrentThread",
+		"category": "Developer Tools",
+		"capabilities": [
+			"Prompt",
+			"Planning",
+			"Skills"
+		],
+		"websiteURL": "https://github.com/getCurrentThread/codex-plan-mode-supplement",
+		"defaultPrompt": [
+			"Plan the change we discussed, grounded in this repository.",
+			"What would break if we skipped the regression tests here?"
+		],
+		"screenshots": []
+	}
+}

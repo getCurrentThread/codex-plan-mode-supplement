@@ -1,0 +1,7 @@
+* text=auto
+
+# The prompt is measured and pasted verbatim; keep it LF everywhere.
+prompt/plan-mode-supplement.txt text eol=lf
+skills/plan-mode-supplement/SKILL.md text eol=lf
+probes/native-plan-mode.txt text eol=lf
+probes/results/**/*.jsonl -text
