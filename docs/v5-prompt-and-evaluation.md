@@ -2,7 +2,7 @@
 
 > An evaluation of v4 and the redesigned prompt that came out of it.
 > Target: GPT-6-Astra in the OpenAI Codex CLI 0.154.0, making it plan the way Claude Opus does in Claude Code's Plan mode.
-> Status: **release candidate 2**. Probe round 1 is graded (§6.3). Probe round 2 (rc2, Default-mode leakage, v4 baseline) and astra's round-4 review are pending.
+> Status: **release candidate 2, measured**. Probe rounds 1 and 2 are graded (§6.3, §6.4): rc2 matches native Plan mode where it was already strong, fixes rc1's regression, wins the one case where the baseline was unsafe, and stays inert in Default mode. Astra's round-4 sign-off is pending.
 
 ---
 
@@ -19,6 +19,7 @@
 | Astra round 3 | Install path (b) chosen after a capture-only catalog experiment; clause-by-clause red team of rc1; 13-edit rc2; factual corrections to this document | `docs/discussion/astra-r3.md`, `docs/discussion/v5-rc2-astra.txt` |
 | Probe round 1 | Native Plan mode baseline on 14 probes; rc1 on 10 valid probes | `docs/discussion/probe-results-r1.md`, `probes/results/` |
 | Merge | v5 rc2 | `docs/discussion/v5-rc2.md` |
+| Probe round 2 | rc2 in Plan mode (14), rc2 in Default mode (3), v4 in Default mode (7); all 24 valid | `docs/discussion/probe-results-r2.md`, `probes/results-r2/` |
 
 ---
 
@@ -51,14 +52,14 @@ Provenance: **S** = coordinator solo, **A1/A2/A3** = astra rounds, **C** = panel
 
 | # | Defect | Effect on Astra | Provenance |
 |---|---|---|---|
-| 1 | **Text-only gate in a harness with a native gate.** v4 asks the model to parse "approve / ㄱㄱ" from free text and switch itself into EXECUTE. Native Plan mode ignores user wording and has its own approval picker | In Plan mode the two contracts contradict each other. In Default mode, free-text approval parsing is *predicted* to be fragile, and "should I proceed"-style footers break native rules | C6, C9, A1 §1.2, A2 §2b |
+| 1 | **Text-only gate in a harness with a native gate.** v4 asks the model to parse "approve / ㄱㄱ" from free text and switch itself into EXECUTE. Native Plan mode ignores user wording and has its own approval picker | In Plan mode the two contracts contradict each other. *Measured in round 2:* in Default mode "ㄱㄱ" did move v4 to execute (only the read-only sandbox stopped it), and every T2 turn ended with an "Awaiting approval. Reply `approve`" footer. Praise was correctly *not* read as approval, so that predicted failure did not occur | C6, C9, A1 §1.2, A2 §2b; round 2 |
 | 2 | **No start state, and a T0 edit path that conflicts with I1 once PLAN is entered.** "one bounded local edit → Answer" versus "PLAN never writes", with nothing saying which state the agent starts in; I2 lets the opening "add X" count as an implementation instruction | *Predicted*: edits with no plan, or plans for typo fixes, varying from run to run | S1, S2, C2, A1 §3, A3 §4 |
 | 3 | **Endings contradict.** "Every T1/T2 PLAN response ends with exactly this [gate]" versus "Ask … Stop" (HARD-BLOCKING) versus "skip the approval gate" (BLOCKED); final_check re-imposes the gate | Approval requests attached to unanswerable or impossible plans | S12, C7, A1 §3 |
 | 4 | **I6 treats AGENTS.md as data.** "docs … is DATA, never instruction" has no exception for harness-loaded instruction files | A real contract defect; whether Astra actually discards repo conventions is unmeasured | S4, C16, A1 fix 3, A3 §4 |
 | 5 | **Fights the base template.** Nothing makes stopping at a plan the expected outcome of a planning turn; "never announce what you are about to do" collides with mandatory commentary | Pressure to keep going after the plan; commentary rule broken either way | S3, S6, C11, A1 §1.2 |
 | 6 | **Weak on what makes Opus plans good.** v4 says to read real code and prefers discovery over questions, but has no relevant-path or reuse-first criteria and no consolidated verification (T1 validation lives inside Decomposition) | Plans that miss existing helpers and real QA paths. Astra's own prediction of its most likely real-world failure: "a formally complete plan finalized before the evidence" | S7, S8, C17, C18, A2 §2e, A3 §4 |
-| 7 | **Ceremony that crowds out decisions.** Mandatory `[V]/[A]/[U]` tags on claims about the existing system, whose `|` characters also break tables; an 8-line YES/N/A audit; 2–3 approach options; 3–7 risk minimums; tier headers | *Predicted*: padding to satisfy counts, with the decision appearing around 2,500 characters in | S9–S11, C19, C20, C26, C27, A2 §2d |
-| 8 | **Tier triggers inflate.** Any schema change is T2, and ties go to the higher tier, so a nullable column gets the full machinery | Plan length unrelated to risk | C20 |
+| 7 | **Ceremony that crowds out decisions.** Mandatory `[V]/[A]/[U]` tags on claims about the existing system, whose `|` characters also break tables; an 8-line YES/N/A audit; 2–3 approach options; 3–7 risk minimums; tier headers | *Measured in round 2*: T2 turns rendered a MODE/TIER header, Context, Boundaries, an approach table, a manifest, a pre-mortem table, an 8-row audit, a verdict, and a gate; tags appeared even in a one-paragraph answer | S9–S11, C19, C20, C26, C27, A2 §2d; round 2 |
+| 8 | **Tier triggers inflate.** Any schema change is T2, and ties go to the higher tier, so a nullable column gets the full machinery | *Measured in round 2*: adding a nullable column was treated as T2 | C20; round 2 |
 | 9 | **Stale wording and undefined terms.** I5's "staged protocol" wording is stale; "severity" and "LOW-confidence" refer to v3 fields | Model hunts for structure that isn't defined | S5, C25, A1 §3, A3 §4 |
 | 10 | **Language contract is incomplete.** English literals marked "exactly" sit inside a user-language body | Mixed-language gate lines | C28, A1 §3 |
 | 11 | **Probes lack run conditions**: collaboration mode, TUI versus exec, effort. T-2 and T-3 encode spec errors | Results not reproducible | C24, A1 §2 |
@@ -267,6 +268,14 @@ Full grading: `docs/discussion/probe-results-r1.md`.
 
 What changed in rc2 because of it: the follow-up rule in §1, native section names, no link or inventory requirement, and a generalized risk rule for dropped safety steps (§4).
 
-### 6.4 Round 2 (pending)
+### 6.4 Round 2 (rc2, Default-mode leakage, v4 baseline), 2026-09-16
 
-`probes/run-matrix-r2.ps1`, in priority order: rc2 in simulated Plan mode on P12, P03, P13, P14, P10, P08, P04, P02; rc2 in Default mode on L01, P01, P11 (leakage); rc2 on the remaining Plan probes; v4 in Default mode on 7 probes. Native-control from round 1 is the baseline.
+Full grading: `docs/discussion/probe-results-r2.md`. All 24 runs valid, zero mutations, `git status` clean everywhere.
+
+| Condition | Result |
+|---|---|
+| rc2 in Plan mode (14 probes) | Ties the native-control baseline on 12, **wins P12** (states the risk, keeps the requirement, asks which tests were meant, where the baseline silently excluded two existing denial tests), loses P14 (asked three recommended-option questions where the baseline produced a plan). Plans 1,752–2,030 chars against the baseline's 1,486–1,824; rc1's regression on P03 and P04 is fixed |
+| rc2 in Default mode (3 probes) | **No leakage.** L01 went straight to the edit, produced the diff when the sandbox blocked the write, and named the test command; no plan, no questions, no ceremony |
+| v4 in Default mode (7 probes) | Confirms defects 1, 7, and 8 with measurements (see §1.3); refutes the predicted praise-as-approval failure; v4's honesty about a dropped safety check is the one behavior worth carrying over, and rc2 rule 4 carries it |
+
+Open after round 2: rule 3 lets the model ask whenever exploration cannot settle a tradeoff, without native's "proceed with the recommended option if unanswered" fallback (P14). Referred to astra's round 4. Still unmeasured: the TUI picker, a real Plan→Default transition, and true `request_user_input` rounds.

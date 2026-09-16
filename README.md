@@ -53,7 +53,7 @@ Do **not** install this through `model_instructions_file`: that key replaces Ast
 | `docs/v5-prompt-and-evaluation.md` | The full write-up: evaluation of the original prompt, harness facts, design decision, install paths, change map, validation |
 | `docs/v4-original-prompt.md` | The original 15k-character prompt that was evaluated (Korean) |
 | `docs/discussion/` | The review record: three independent reviews, the target model's own three rounds, drafts, and the graded probe results |
-| `probes/` | The probe harness: runner, 15 probes, an 18-file fixture repository, signal extraction, and round 1 results |
+| `probes/` | The probe harness: runner, 15 probes, an 18-file fixture repository, signal extraction, and the results of both rounds |
 
 ## Reproducing the measurement
 
@@ -69,7 +69,14 @@ Each probe runs in a fresh git-initialized copy of `probes/fixture/` under `code
 
 ## Status
 
-The current prompt is **release candidate 2**. Round 1 measured native Plan Mode and rc1; rc2 revises rc1 from those results and from the target model's line-by-line review. **Round 2, which measures rc2 itself and Default-mode leakage, has not finished yet** - see `docs/v5-prompt-and-evaluation.md` §6. Claims in the docs are marked as measured or predicted; treat the predicted ones as untested.
+The current prompt is **release candidate 2**, and it has been measured. Round 1 graded native Plan Mode and an earlier candidate; round 2 graded rc2 itself across 24 runs, none of which mutated anything:
+
+- **Ties native Plan Mode** on 12 of 14 planning probes, and fixes the earlier candidate's follow-up regression.
+- **Wins the case native Plan Mode got wrong:** asked to skip the denial regression tests, it states the risk, keeps the requirement, and asks which tests were meant.
+- **Stays inert in Default mode** (3/3): an ordinary edit request is implemented directly, with no plan and no questions.
+- **Loses one:** on a new-module design it asked three questions with recommendations where native Plan Mode produced a plan. See `docs/discussion/probe-results-r2.md` §4.
+
+Still unmeasured: the TUI approval picker, a real Plan-to-Default transition, and true `request_user_input` rounds. Claims in the docs are marked as measured or predicted; treat the predicted ones as untested. A final review round by the target model is in progress.
 
 Documents under `docs/discussion/` are a historical record and refer to files by their pre-restructure paths (`discussion/...`, `plan-mode-prompt-v5.md`).
 
