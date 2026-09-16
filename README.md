@@ -8,14 +8,14 @@ Target: GPT-6-Astra in Codex CLI 0.154.0. The goal was to make Codex plan the wa
 
 The starting point was a 15k-character prompt (`docs/v4-original-prompt.md`) that reimplemented plan mode in text: its own tiers, evidence tags, approval parser, and execute rules. Codex already has a native Plan Mode with its own mutation rules, question tool, `<proposed_plan>` handoff, and approval picker, and GPT-6-Astra's base instructions push the model *away* from stopping at a plan. A text reimplementation fights both.
 
-Measurement backed this up. On 14 probes, native Plan Mode with no added prompt never mutated anything, answered, asked, and planned in the right shape, reused the existing helper, used the repository's own test command, and refused to run a side-effecting script. **Native Plan Mode is already strong**, so this prompt only adds what was missing and avoids restating what Plan Mode already says.
+Measurement backed this up. On 14 probes, native Plan Mode with no added prompt never mutated anything, answered, asked, and planned in the right shape, reused the existing helper, used the repository's own test command, and refused to run a side-effecting script. **Native Plan Mode is already strong**, so this prompt reinforces what Plan Mode already asks for rather than restating it, and adds the rest.
 
-What it adds:
+What it reinforces or adds:
 
 - reuse-first grounding (find the existing helper, name it with its path)
 - verification with observable pass/fail, and honesty about which checks actually ran
 - rollback or containment for irreversible steps
-- **a risk statement when the user drops a safety step** - the one clear gap the probes found in native Plan Mode: asked to "skip the regression tests that check regular users are still blocked", it silently excluded two existing denial tests with no warning
+- **a risk statement when the user drops a safety step** - the one clear gap the probes found in native Plan Mode: asked to "skip the regression tests that check regular users are still blocked", it dropped two existing denial tests from the verification run without a concrete risk warning. It did list the exclusions and note that the restriction would get static review only, so the gap is the missing warning, not a concealed change
 - a silent adversarial review before the plan is emitted
 
 ## Install
@@ -69,14 +69,15 @@ Each probe runs in a fresh git-initialized copy of `probes/fixture/` under `code
 
 ## Status
 
-The current prompt is **release candidate 2**, and it has been measured. Round 1 graded native Plan Mode and an earlier candidate; round 2 graded rc2 itself across 24 runs, none of which mutated anything:
+The current prompt is **final for this cycle**: rc2, signed off unchanged by the target model after it read all 24 round-2 logs (`docs/discussion/astra-r4.md`). Round 1 graded native Plan Mode and an earlier candidate; round 2 graded rc2 across 24 runs. What the logs show, and only that:
 
-- **Ties native Plan Mode** on 12 of 14 planning probes, and fixes the earlier candidate's follow-up regression.
-- **Wins the case native Plan Mode got wrong:** asked to skip the denial regression tests, it states the risk, keeps the requirement, and asks which tests were meant.
-- **Stays inert in Default mode** (3/3): an ordinary edit request is implemented directly, with no plan and no questions.
-- **Loses one:** on a new-module design it asked three questions with recommendations where native Plan Mode produced a plan. See `docs/discussion/probe-results-r2.md` §4.
+- **No write was attempted in any run**, in either arm, in either round.
+- **Matches the native baseline** on the planning probes, and repairs the earlier candidate's dropped-plan response to praise.
+- **Better risk communication where the baseline was weakest:** asked to skip the denial regression tests, it states the exposure risk, says the restriction still stands, recommends keeping the checks, and asks which tests were meant. The baseline dropped them with no risk warning. Neither arm implemented anything unsafe; this is a communication difference, not a prevented incident.
+- **No planning leakage observed in Default mode** across three fresh probes: an ordinary edit request produced a patch and the test command, with no plan and no questions. A real Plan-to-Default transition within one session is untested.
+- **One difference the harness confounds:** on a new-module design rc2 carried three consequential questions (event coverage, storage, audit-failure policy) into its answer, where the baseline defaulted after its question tool was rejected. Both are defensible; see `docs/discussion/probe-results-r2.md` §4 and `astra-r4.md` §3.
 
-Still unmeasured: the TUI approval picker, a real Plan-to-Default transition, and true `request_user_input` rounds. Claims in the docs are marked as measured or predicted; treat the predicted ones as untested. A final review round by the target model is in progress.
+Still unmeasured: the TUI approval picker, a real mode transition, writable implementation, and true `request_user_input` rounds. No Claude Opus comparison was run, so "plans like Opus" is the design goal, not a measured result. Claims in the docs are marked as measured or predicted.
 
 Documents under `docs/discussion/` are a historical record and refer to files by their pre-restructure paths (`discussion/...`, `plan-mode-prompt-v5.md`).
 
